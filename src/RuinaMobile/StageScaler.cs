@@ -178,6 +178,12 @@ namespace RuinaMobile
                     return;
                 }
 
+                if (cam.clearFlags == CameraClearFlags.Skybox || cam.clearFlags == CameraClearFlags.SolidColor)
+                {
+                    RestoreAll("Skipped here: camera '" + cam.name + "' clears the screen after the stage");
+                    return;
+                }
+
                 if (cam.depth < minOtherDepth) minOtherDepth = cam.depth;
             }
 

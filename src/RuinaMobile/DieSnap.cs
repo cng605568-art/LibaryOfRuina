@@ -137,9 +137,18 @@ namespace RuinaMobile
                     var go = graphic.gameObject;
                     if (go.name == PadName || !Matches(go.name, keywords)) continue;
 
-                    // Pad the outermost matching ancestor once (e.g. "SpeedDiceSlot" rather than its child image).
-                    Transform target = go.transform;
-                    for (var t = target.parent; t != null && Matches(t.name, keywords); t = t.parent) target = t;
+                    // Pad the outermost matching ancestor once (e.g. "SpeedDiceSlot" rather than its child image),
+                    // but never a large container: an invisible pad that big would swallow taps meant for the battlefield.
+                    var first = go.transform as RectTransform;
+                    if (first == null || !IsSmall(first)) continue;
+                    Transform target = first;
+                    for (var t = target.parent; t != null && Matches(t.name, keywords); t = t.parent)
+                    {
+                        var parentRect = t as RectTransform;
+                        if (parentRect == null || !IsSmall(parentRect)) break;
+                        target = t;
+                    }
+
                     var rect = target as RectTransform;
                     if (rect == null || !done.Add(rect.GetInstanceID())) continue;
                     if (rect.Find(PadName) != null) continue;
@@ -155,6 +164,34 @@ namespace RuinaMobile
             }
 
             Status = pads.Count + " UI touch pad(s), " + colliders.Count + " collider(s) enlarged";
+        }
+
+        private static readonly Vector3[] Corners = new Vector3[4];
+
+        /// <summary>True if the element covers at most 20% of the screen width and 25% of its height.</summary>
+        private static bool IsSmall(RectTransform rt)
+        {
+            var canvas = rt.GetComponentInParent<Canvas>();
+            if (canvas == null) return false;
+            var root = canvas.rootCanvas;
+            rt.GetWorldCorners(Corners);
+
+            Vector2 min;
+            Vector2 max;
+            if (root.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                min = Corners[0];
+                max = Corners[2];
+            }
+            else
+            {
+                var cam = root.worldCamera != null ? root.worldCamera : Camera.main;
+                if (cam == null) return true;
+                min = RectTransformUtility.WorldToScreenPoint(cam, Corners[0]);
+                max = RectTransformUtility.WorldToScreenPoint(cam, Corners[2]);
+            }
+
+            return Mathf.Abs(max.x - min.x) <= Screen.width * 0.2f && Mathf.Abs(max.y - min.y) <= Screen.height * 0.25f;
         }
 
         private void CreatePad(RectTransform target)
