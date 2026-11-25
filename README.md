@@ -24,6 +24,12 @@ Ruina Mobile is a small plugin that runs **inside the real PC game** while an An
 
 ---
 
+## Native route (experimental)
+
+Winlator turned out far too slow on a budget Mali phone (1–6 FPS on a Dimensity 6020). The [`nx2android-profile/`](nx2android-profile/README.md) folder is a second route: a Library of Ruina profile for [nx2android](https://github.com/shirai91/nx2android). nx2android runs the **Switch** version's own ARM64 code natively on the phone, so there's no x86 translation and no Wine. You need your own Switch dump (base game + update 1.0.3) and `prod.keys`. It has not been tested on Android yet; see its README for the steps and the risks.
+
+---
+
 ## Why there's no standalone launcher APK
 
 The first plan was an APK that boots the PC game files on a built-in ARM64 Unity runtime. That can't work, for two reasons:

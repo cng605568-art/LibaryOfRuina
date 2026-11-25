@@ -1,0 +1,14 @@
+# Library of Ruina on Android (keys in docs/ARCHITECTURE.md "Game profiles on Android")
+# Unity 2021.3.19f1 IL2CPP with FMOD on SDK 15.3.2, update 1.0.3 (v262144). The game profile beside this file (game.tsv, patches.py, shader tables, README.md) is
+# LoR-NX's (https://github.com/Vastrilliant/LoR-NX, commit d3c38d0, GPL-3.0), which plays on the Mac and was reported working on an iPhone. Its sdk and subsdk0
+# builds are Blasphemous 2's (010040801A4C8000), which plays on Android with no requires row.
+# Not yet run on Android. First device: a Dimensity 6020 phone (Mali-G57 MP2, Android 15). Mali has no BC textures, so the host decodes them on the CPU
+# (gfx_vk_tex.c bc_decode: 4 to 8 times the texture memory); that is why there is no "requires bcn" row. Set the game's texture quality to Low.
+# Handheld (1280x720) by default and held at 30 fps: the game is GPU-bound even on an iPhone's A15 at 1080p (LoR-NX README, Performance).
+status	experimental
+tested	v262144 not yet run on a device
+package	org.nx2a.libraryofruina
+orientation	landscape
+pacing	fixed30
+setting	docked=0
+setting	fps=1
