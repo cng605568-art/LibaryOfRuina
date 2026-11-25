@@ -1,0 +1,27 @@
+RUINA MOBILE - QUICK INSTALL
+============================
+
+1. Copy EVERYTHING in this zip into your "Library Of Ruina" folder,
+   next to LibraryOfRuina.exe. Afterwards that folder should contain:
+
+     LibraryOfRuina.exe
+     LibraryOfRuina_Data\
+     BepInEx\                      <- new
+     winhttp.dll                   <- new
+     doorstop_config.ini           <- new
+     .doorstop_version             <- new (may be hidden)
+
+2. In Winlator (or GameHub / GameNative), add this environment variable
+   to the container or game shortcut:
+
+     WINEDLLOVERRIDES=winhttp=n,b
+
+   Without it Wine uses its own winhttp.dll and the plugin never starts.
+
+3. Start LibraryOfRuina.exe. The first start takes longer (BepInEx sets
+   itself up). A small "SET" button appears in the top-left corner.
+
+4. If you do not see SET, open BepInEx\LogOutput.log and look for
+   "Ruina Mobile loaded". No log file at all = step 2 is missing.
+
+Full guide: https://github.com/cng605568-art/LibaryOfRuina

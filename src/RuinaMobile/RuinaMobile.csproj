@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>RuinaMobile</AssemblyName>
+    <RootNamespace>RuinaMobile</RootNamespace>
+    <Product>Ruina Mobile</Product>
+    <Description>Touch controls, frame pacing and stage render scaling for Library of Ruina running under Wine + Box64 on Android.</Description>
+    <Version>0.1.0</Version>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <Deterministic>true</Deterministic>
+    <DebugType>embedded</DebugType>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!--
+    Compile-time references only. Nothing from Library of Ruina is referenced:
+    the plugin talks to the game purely through Unity engine APIs, so the repo
+    never needs (and never contains) Assembly-CSharp.dll or any game file.
+    BepInEx.Core brings in BepInEx.dll and HarmonyX (0Harmony.dll).
+    UnityEngine.Modules are reference-only stubs of the Unity 2019.4 engine API.
+    UnityEngine.UI is NOT referenced; it is reached through reflection at runtime.
+  -->
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.*" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

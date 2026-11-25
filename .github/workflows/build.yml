@@ -1,0 +1,68 @@
+name: Build Ruina Mobile
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build RuinaMobile.dll
+        run: dotnet build src/RuinaMobile/RuinaMobile.csproj -c Release -o out/plugin
+
+      - name: Download BepInEx 5 for Windows x64
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          url=$(gh api "repos/BepInEx/BepInEx/releases?per_page=50" \
+            --jq '[.[] | select(.prerelease == false) | .assets[] | select(.name | test("^BepInEx_(win_)?x64_5\\.[0-9.]+\\.zip$")) | .browser_download_url] | first')
+          if [ -z "$url" ] || [ "$url" = "null" ]; then
+            echo "Could not find a BepInEx 5 x64 release asset" >&2
+            exit 1
+          fi
+          echo "Using $url"
+          curl -fsSL -o bepinex.zip "$url"
+
+      - name: Assemble drop-in package
+        run: |
+          set -euo pipefail
+          rm -rf package
+          mkdir -p package
+          unzip -q bepinex.zip -d package
+          mkdir -p package/BepInEx/plugins/RuinaMobile
+          cp out/plugin/RuinaMobile.dll package/BepInEx/plugins/RuinaMobile/
+          cp LICENSE THIRD_PARTY_NOTICES.md package/BepInEx/plugins/RuinaMobile/
+          cp dist/INSTALL.txt package/RuinaMobile_INSTALL.txt
+          echo "Package contents:"
+          find package -maxdepth 4 | sort
+          (cd package && zip -qr ../RuinaMobile-dropin.zip .)
+
+      - name: Upload drop-in package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RuinaMobile-dropin
+          path: package/
+          if-no-files-found: error
+
+      - name: Publish GitHub release (version tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: RuinaMobile-dropin.zip
+          generate_release_notes: true
