@@ -13,7 +13,7 @@ This folder lets [nx2android](https://github.com/shirai91/nx2android) build a na
 
 - **Mali support is unproven.** nx2android's guide says Mali phones can't run its games, and the only Mali report so far (a Pixel 9 Pro) showed rendering glitches.
 - **Memory.** Textures decoded on the CPU take 4 to 8 times the memory. Set the game's texture quality to **Low**.
-- **Weak GPU.** The game is limited by GPU speed even on an iPhone, so this profile starts in handheld mode (1280×720) and holds 30 fps.
+- **Weak GPU.** The game is limited by GPU speed even on an iPhone, so this profile starts in handheld mode (1280×720).
 
 ## What you need
 
