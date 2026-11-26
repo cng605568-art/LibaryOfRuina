@@ -4,11 +4,10 @@
 # builds are Blasphemous 2's (010040801A4C8000), which plays on Android with no requires row.
 # Not yet run on Android. First device: a Dimensity 6020 phone (Mali-G57 MP2, Android 15). Mali has no BC textures, so the host decodes them on the CPU
 # (gfx_vk_tex.c bc_decode: 4 to 8 times the texture memory); that is why there is no "requires bcn" row. Set the game's texture quality to Low.
-# Handheld (1280x720) by default and held at 30 fps: the game is GPU-bound even on an iPhone's A15 at 1080p (LoR-NX README, Performance).
+# Handheld (1280x720) by default: the game is GPU-bound even on an iPhone's A15 at 1080p (LoR-NX README, Performance).
 status	experimental
 tested	v262144 not yet run on a device
 package	org.nx2a.libraryofruina
 orientation	landscape
-pacing	fixed30
 setting	docked=0
 setting	fps=1
